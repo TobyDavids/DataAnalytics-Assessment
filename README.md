@@ -8,3 +8,26 @@ Finally, I joined the merged_data with the users_customuser table to retrieve us
 
 **Challenges**:  
 Initially, when I used a direct subquery to run my query, it took longer to run and I discovered that using CTE helped me break down my codes in chunks where i had to now only join tables with smaller records thereby reducing run time and improving query performance
+
+## 📌 Question 2: Transaction Frequency Analysis
+
+**Approach**:  
+For this question, I structured the query using Common Table Expressions (CTEs) by creating 2 CTEs. The first CTE was used to generate the number of monthly transactions by each customer from the savings_savingsaccount table, the Group BY function was employed here to properly agregate the records by the owner_id and the year_month fields. The second CTE was used to generate the average monthly transaction. I used the average function to generate this, selected the owner_id from the first CTE Grouped results by the owner_id for proper aggregation.
+
+Finally, I used a case statement to Categorize customer transaction frequency, counted the number of all records for each of these categories and utiized the average function to return the average transactions per month for each of these transaction frequency. I finally used the GROUP BY function to aggregate each frequency category.
+
+**Challenges**:  
+Initially, I didn't aggregate the average monthly transaction at the final outer query. I only did that with the avg_transaction CTE. After running my query, I discovered I got multiple records of average monthly transactions for each category which didn't meet the stakeholder's criteria. I had to critically look at the question and found out where the mistake was  not taking note of the average of those customer-level averages for each frequency group. 
+
+## 📌 Question 3: Account Inactivity Alert
+
+**Approach**:  
+For this question, I structured the query using Common Table Expressions (CTEs) by creating 3 CTEs. The first CTE was used to generate active accounts with inflow of transactions. I also created a filter using the Where clause in this first CTE to only return transaction_status that were only sucessful/valid, and confirmed_amount been greater than zero. This was to ensure the condition of the inflow of funds was met. I used the second CTE to filter the qualified accounts based on when investment or savings plan = 1 in the case statement I utilized in this CTE. The third CTE I created was used to return the final accounts.
+Here, used the DATEDIFF function to return the difference between the current date and either the last_transaction date or the start_date. This was done to account for cases with las_transaction_date is null, we result to the day the user created an account. 
+
+I created a third CTE that joined the qualified accounts temp table I created as the second CTE to first CTE (inflow_transactions) using the commont keys between them (plan_id).
+Next, I created a Where clause condition to filter results to only include transactions over a year ago or transactions with no inflow ever. 
+Finally, I selected all records from the 3rd CTE and created a WHERE clause to only include transactions beyond 365 days/1 year
+
+**Challenges**:  
+At first, without the final outer query, I still got records with inactive days below 365 or with negative value. Seeing this, I went ahead to create a further condition in the where clause of my final outer query to only include transactions beyond 365 days/1 year
