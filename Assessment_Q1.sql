@@ -3,6 +3,7 @@ USE adashi_staging;
 -- Question 1
 SELECT 
     uc.id AS owner_id,
+    -- name records in the users_customuser table was null, so concatenating the first and last names was needed
     CONCAT(uc.first_name, ' ', uc.last_name) AS name,
     -- Using a case statement as condition to return all records of savings and invesement plan, then count the distinct records
     COUNT(DISTINCT CASE WHEN p.is_regular_savings = 1 THEN p.id END) AS savings_count,
