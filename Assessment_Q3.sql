@@ -34,7 +34,7 @@ SELECT
     qa.plan_id,
     qa.owner_id,
     qa.type,
-    it.last_transaction_date,
+    DATE(it.last_transaction_date) AS last_transaction_date,
     DATEDIFF(CURDATE(), COALESCE(it.last_transaction_date, qa.start_date)) AS inactivity_days
     -- To account for cases with las_transaction_date is null, we result to the day the user created an account
 FROM qualified_accounts qa
