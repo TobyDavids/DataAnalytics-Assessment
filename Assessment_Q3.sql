@@ -14,7 +14,8 @@ WITH inflow_transactions AS
     GROUP BY s.plan_id, s.owner_id
 ),
 -- Filtering the qualified accounts based on investment or savings plan = 1
-qualified_accounts AS (
+qualified_accounts AS 
+(
     SELECT 
         p.id AS plan_id,
         p.owner_id,
