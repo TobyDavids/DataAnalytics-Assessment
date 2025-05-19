@@ -1,5 +1,3 @@
-USE adashi_staging;
-
 -- Question 1
 SELECT 
 	uc.id AS owner_id,
