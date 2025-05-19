@@ -22,11 +22,9 @@ Initially, I didn't aggregate the average monthly transaction at the final outer
 ## 📌 Question 3: Account Inactivity Alert
 
 **Approach**:  
-For this question, I structured the query using Common Table Expressions (CTEs) by creating 3 CTEs. I started by creating a user_plans CTE to filter only relevant plans—savings and investment—using a CASE statement to assign a type label based on the conditions is_regular_savings = 1 or is_a_fund = 1. This helped to easily categorize the plans for each user. I also created a filter using the Where clause in this first CTE to only return transaction_status that were only successful/valid, and confirmed_amount been greater than zero. This was to ensure the condition of the inflow of funds was met. I used the second CTE to filter the qualified accounts based on when investment or savings plan = 1 in the case statement I utilized in this CTE. The third CTE I created was used to return the final accounts.
+For this question, I structured the query using Common Table Expressions (CTEs) by creating 3 CTEs. I started by creating a inflow_transactions CTE to filter only relevant plans; savings and investment, using a CASE statement to assign a type label based on the conditions is_regular_savings = 1 or is_a_fund = 1. This helped to easily categorize the plans for each user. I also created a filter using the Where clause in this first CTE to only return transaction_status that were only successful/valid, and confirmed_amount been greater than zero. This was to ensure the condition of the inflow of funds was met. I used the second CTE to filter the qualified accounts based on when investment or savings plan = 1, which was made possible by a case statement. The third CTE I created was used to return the final accounts that have not had an inflow of funds for over 365 days.
 Here, I used the DATEDIFF function to return the difference between the current date and either the last_transaction date or the start_date. This was done to account for cases with las_transaction_date is null, we result to the day the user created an account. 
 
-I created a third CTE that joined the qualified accounts temp table I created as the second CTE to first CTE (inflow_transactions) using the common keys between them (plan_id).
-Next, I created a Where clause condition to filter results to only include transactions over a year ago or transactions with no inflow ever. 
 Finally, I selected all records from the 3rd CTE and created a WHERE clause to only include transactions beyond 365 days/1 year
 
 **Challenges**:  
@@ -39,7 +37,7 @@ For this question, I structured the query using Common Table Expressions (CTEs) 
 
 Next, I created a tenure CTE to calculate how long each customer has been active. I used TIMESTAMPDIFF to compute the number of months between the date_joined field and the current date. This gave me each user's tenure_months value. I also combined their first and last names for clearer identification in the output.
 
-For the final Customer Lifetime Value (CLV) estimation, I then joined the tenure CTE with the transactions CTE using the customer ID (customer_id = owner_id). In the final SELECT statement, I calculated the CLV using the formula:
+For the final Customer Lifetime Value (CLV) estimation, I joined the tenure CTE with the transactions CTE using the customer ID (customer_id = owner_id). In the final SELECT statement, I calculated the CLV using the formula:
 CLV=(total transactions/tenure in months)×12×(total value ×0.001/total transactions)
 ​
  )
